@@ -97,6 +97,13 @@ export default function EventDetail() {
     : [1, 2, 3, 4, 5];
 
   async function handleCheckout() {
+    const currentEvent = event;
+
+    if (!currentEvent) {
+      alert("イベント情報の読み込みに失敗しました。");
+      return;
+    }
+
     if (isSoldOut) {
       alert("このイベントは満席です。");
       return;
@@ -119,9 +126,9 @@ export default function EventDetail() {
           ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
         },
         body: JSON.stringify({
-          eventId: event.id,
-          title: event.title,
-          price: event.price,
+          eventId: currentEvent.id,
+          title: currentEvent.title,
+          price: currentEvent.price,
           quantity,
           customerEmail: email || undefined,
         }),

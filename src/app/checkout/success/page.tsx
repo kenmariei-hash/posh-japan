@@ -1,11 +1,11 @@
 "use client";
 
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 
-export default function CheckoutSuccessPage() {
+function CheckoutSuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [message, setMessage] = useState("購入内容を確認しています...");
@@ -72,5 +72,22 @@ export default function CheckoutSuccessPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-white p-6 text-gray-900">
+        <SiteHeader />
+        <div className="mx-auto max-w-2xl rounded-2xl border border-gray-200 p-8 shadow-sm">
+          <h1 className="mb-3 text-3xl font-bold">購入が完了しました</h1>
+          <p className="mb-2 text-gray-600">購入内容を確認しています...</p>
+        </div>
+      </main>
+    }
+    >
+      <CheckoutSuccessContent />
+    </Suspense>
   );
 }
