@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const configuredAppUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
 
   useEffect(() => {
     if (!loading && session) {
@@ -28,11 +29,19 @@ export default function LoginPage() {
       return;
     }
 
+    const redirectBase =
+      configuredAppUrl || (typeof window !== "undefined" ? window.location.origin : "");
+    if (!redirectBase) {
+      setMessage("ログインの戻り先URLが未設定です。");
+      setIsSubmitting(false);
+      return;
+    }
+
     setIsSubmitting(true);
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/create`,
+        emailRedirectTo: `${redirectBase}/create`,
       },
     });
 
